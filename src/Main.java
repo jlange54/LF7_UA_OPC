@@ -7,26 +7,12 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-
-
-        try {
-            OPCClientETS.getInstance().connectToMachine(Station.BF);
-            OPCClientETS.getInstance().browseOPCServer();
-
-            InputStream input = OPCClientETS.getInstance().getInputStream();
-
-            Scanner in = new Scanner(input);
-
-            while (in.hasNextLine()) {
-                String line = in.nextLine();
-                
-                System.out.println(line);
+        for(Station station : Station.values()){
+//            System.out.println(station.name());
+            if (station.name() != "Controller"){
+                System.out.println("Getting output from: " + station.name());
+                GetOutputFromStation.execute(station);
             }
-
-
-            OPCClientETS.getInstance().disconnect();
-        }catch (Exception e) {
-            e.printStackTrace();
         }
     }
 }
