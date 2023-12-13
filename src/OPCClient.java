@@ -8,16 +8,29 @@ import java.util.Scanner;
 
 public class OPCClient {
 
+    public static void start () {
+        for(Station station : Station.values()){
+            if (station.name() != "Controller"){
+                System.out.println("Getting output from: " + station.name());
+                getOutput(station);
+            }
+        }
+    }
+
     public static void getOutput (Station station) {
         try {
             OPCClientETS.getInstance().connectToMachine(station);
             OPCClientETS.getInstance().browseOPCServer();
 
+            System.out.println("Get InputStream from" + station.name());
             InputStream input = OPCClientETS.getInstance().getInputStream();
 
-            System.out.println("writing CSV for "+ station.name());
-            CSV.write("./CSV_Exports/export_"+station.name()+".csv", filterForSensor(input));
-
+            System.out.println("Filtering for Sensor lines");
+            List<String> result = filterForSensor(input);
+            System.out.println("Result List building complete");
+            Debug.printList(result);
+//            System.out.println("writing CSV for "+ station.name());
+//            FileWriter.write("./Exports/export_"+station.name()+".txt",result);
             OPCClientETS.getInstance().disconnect();
             System.out.println("Completed");
         }catch (Exception e) {
@@ -27,24 +40,25 @@ public class OPCClient {
 
     public static List<String> filterForSensor (InputStream input) {
         List<String> result = new ArrayList<>();
-        int loop = 0;
-        String firstSensor = new String();
-        String currentSensor = new String();
         Scanner in = new Scanner(input);
 
-        while(in.hasNextLine() && firstSensor != currentSensor){
+        while(in.hasNextLine()){
             String line = in.nextLine();
-            currentSensor = Regex.substitution(line,".*DisplayName=\".*\\+(.*)\".*NodeClass.*", 1);
-            if (loop == 0) {
-                firstSensor = currentSensor;
-            }
-
-            if (line.contains("+")){
-                result.add(line);
-                System.out.println(line);
-            }
-            loop++;
+//            System.out.println(line);
+//            if (line.contains("+")){
+////                String nodeID_ns = Regex.substitution(line, ".*ns=(\\d);s=\"\\+(.*)\".*BrowseName.*", 1);
+////                String nodeID_s = Regex.substitution(line, ".*ns=(\\d);s=\"\\+(.*)\".*BrowseName.*", 2);
+////                String resultLine = nodeID_ns+","+nodeID_s;
+//                result.add(line);
+////                System.out.println(line);
+//            }
+//            if (line.contains("END DATASET")) {
+//                System.out.println(line);
+//                break;
+//            }
+            result.add(line);
         }
+        in.close();
         return result;
     }
 }
