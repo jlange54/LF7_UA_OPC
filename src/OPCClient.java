@@ -9,15 +9,17 @@ import java.util.Scanner;
 public class OPCClient {
 
     public static void start () {
+        Runtime.start();
         for(Station station : Station.values()){
             if (station.name() != "Controller"){
                 System.out.println("Getting output from: " + station.name());
-                getOutput(station);
+                getRawOutput(station);
             }
         }
+        System.out.println("Program completed in " + Runtime.end() + " seconds");
     }
 
-    public static void getOutput (Station station) {
+    public static void getRawOutput (Station station) {
         try {
             OPCClientETS.getInstance().connectToMachine(station);
             OPCClientETS.getInstance().browseOPCServer();
@@ -25,12 +27,8 @@ public class OPCClient {
             System.out.println("Get InputStream from" + station.name());
             InputStream input = OPCClientETS.getInstance().getInputStream();
 
-            System.out.println("Filtering for Sensor lines");
-            List<String> result = filterForSensor(input);
-            System.out.println("Result List building complete");
-//            Debug.printList(result);
             System.out.println("writing file for "+ station.name());
-            File.write("./Exports/export_"+station.name()+".txt",result);
+            File.write("./Exports/export_"+station.name()+".txt",filterForSensor(input));
             OPCClientETS.getInstance().disconnect();
             System.out.println("Completed");
         }catch (Exception e) {
@@ -44,10 +42,9 @@ public class OPCClient {
 
         while(in.hasNextLine()){
             String line = in.nextLine();
-//            System.out.println(line);
             if (line.contains("+")){
-                String nodeID_ns = Regex.substitution(line, ".*ns=(\\d);s=\"\\+(.*)\".*BrowseName.*", 1);
-                String nodeID_s = Regex.substitution(line, ".*ns=(\\d);s=\"\\+(.*)\".*BrowseName.*", 2);
+                String nodeID_ns = Regex.substitution(line, ".*ns=(\\d);s=(\"\\+.*)\".*BrowseName.*", 1);
+                String nodeID_s = Regex.substitution(line, ".*ns=(\\d);s=(\"\\+.*)\".*BrowseName.*", 2);
                 String resultLine = nodeID_ns+","+nodeID_s;
                 result.add(resultLine);
                 System.out.println(resultLine);
@@ -57,6 +54,7 @@ public class OPCClient {
                 break;
             }
         }
+
         in.close();
         return result;
     }
