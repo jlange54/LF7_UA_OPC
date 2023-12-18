@@ -28,9 +28,9 @@ public class OPCClient {
             System.out.println("Filtering for Sensor lines");
             List<String> result = filterForSensor(input);
             System.out.println("Result List building complete");
-            Debug.printList(result);
-//            System.out.println("writing CSV for "+ station.name());
-//            FileWriter.write("./Exports/export_"+station.name()+".txt",result);
+//            Debug.printList(result);
+            System.out.println("writing file for "+ station.name());
+            File.write("./Exports/export_"+station.name()+".txt",result);
             OPCClientETS.getInstance().disconnect();
             System.out.println("Completed");
         }catch (Exception e) {
@@ -45,18 +45,17 @@ public class OPCClient {
         while(in.hasNextLine()){
             String line = in.nextLine();
 //            System.out.println(line);
-//            if (line.contains("+")){
-////                String nodeID_ns = Regex.substitution(line, ".*ns=(\\d);s=\"\\+(.*)\".*BrowseName.*", 1);
-////                String nodeID_s = Regex.substitution(line, ".*ns=(\\d);s=\"\\+(.*)\".*BrowseName.*", 2);
-////                String resultLine = nodeID_ns+","+nodeID_s;
-//                result.add(line);
-////                System.out.println(line);
-//            }
-//            if (line.contains("END DATASET")) {
-//                System.out.println(line);
-//                break;
-//            }
-            result.add(line);
+            if (line.contains("+")){
+                String nodeID_ns = Regex.substitution(line, ".*ns=(\\d);s=\"\\+(.*)\".*BrowseName.*", 1);
+                String nodeID_s = Regex.substitution(line, ".*ns=(\\d);s=\"\\+(.*)\".*BrowseName.*", 2);
+                String resultLine = nodeID_ns+","+nodeID_s;
+                result.add(resultLine);
+                System.out.println(resultLine);
+            }
+            if (line.contains("END DATASET")) {
+                System.out.println(line);
+                break;
+            }
         }
         in.close();
         return result;
