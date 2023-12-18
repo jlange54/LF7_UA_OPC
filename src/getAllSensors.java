@@ -1,4 +1,5 @@
 import de.judge.opc_ets.OPCClientETS;
+import de.judge.opc_ets.SensorList;
 import de.judge.opc_ets.Station;
 
 import java.io.InputStream;
@@ -6,31 +7,39 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class OPCClient {
+public class getAllSensors {
 
-    public static void start () {
-        Runtime.start();
-        for(Station station : Station.values()){
-            if (station.name() != "Controller"){
-                System.out.println("Getting output from: " + station.name());
-                getRawOutput(station);
-            }
+
+    public static void getDataFromSensorsFromStation (Station station, SensorList sensorList) {
+        try {
+            OPCClientETS.getInstance().connectToMachine(station);
+            OPCClientETS.getInstance().browseOPCServer(sensorList);
+        }catch (Exception e) {
+            e.printStackTrace();
         }
-        System.out.println("Program completed in " + Runtime.end() + " seconds");
     }
 
-    public static void getRawOutput (Station station) {
+    public static void execute () {
+        for(Station station : Station.values()){
+            if (!station.name().equals("Controller")){
+                System.out.println("Getting output from: " + station.name());
+                getAllSensorsFromStation(station);
+            }
+        }
+    }
+
+    private static void getAllSensorsFromStation (Station station) {
         try {
             OPCClientETS.getInstance().connectToMachine(station);
             OPCClientETS.getInstance().browseOPCServer();
 
-            System.out.println("Get InputStream from" + station.name());
+            System.out.println("Get InputStream from: " + station.name());
             InputStream input = OPCClientETS.getInstance().getInputStream();
 
-            System.out.println("writing file for "+ station.name());
-            File.write("./Exports/export_"+station.name()+".txt",filterForSensor(input));
+            System.out.println("writing file for: "+ station.name());
+            FileRW.write("./data/sensorLists/export_"+station.name()+".txt",filterForSensor(input));
             OPCClientETS.getInstance().disconnect();
-            System.out.println("Completed");
+            System.out.println("Completed instance: "+station.name());
         }catch (Exception e) {
             e.printStackTrace();
         }
