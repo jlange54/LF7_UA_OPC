@@ -13,12 +13,16 @@ import java.util.*;
 
 public class getSensorOutputs {
 
-    public static void execute (Station station, int queryInterval, int queries) throws IOException {
-        getDataFromSensorsFromStation(station, buildSensorListFromStation (station), queryInterval, queries);
-
+    public static void execute (int queryInterval, int queryDuration) throws IOException {
+        for(Station station : Station.values()){
+            if (!station.name().equals("Controller")){
+                System.out.println("Getting output from: " + station.name());
+                getDataFromSensorsFromStation(station, buildSensorListFromStation (station), queryInterval, queryDuration);
+            }
+        }
     }
 
-    public static void getDataFromSensorsFromStation (Station station, SensorList sensorList, int queryInterval, int queries) {
+    public static void getDataFromSensorsFromStation (Station station, SensorList sensorList, int queryInterval, int queryDuration) {
         try {
             OPCClientETS.getInstance().connectToMachine(station);
             OPCClientETS.getInstance().setCrawlOffset(queryInterval);
@@ -28,7 +32,7 @@ public class getSensorOutputs {
             InputStream input = OPCClientETS.getInstance().getInputStream();
             String time = LocalDateTime.now().toString().replace(":", "-").replace(".", "-");
             System.out.println("Writing sensor output for station: " + station.name());
-            FileRW.writeWithIS("./data/sensorDataOutputs/" + time + "_export_" + station.name() + ".txt", input, queries);
+            FileRW.writeWithIS("./data/sensorDataOutputs/" + time + "_export_" + station.name() + ".txt", input, queryDuration);
 
             OPCClientETS.getInstance().disconnect();
             System.out.println("Completed instance: "+station.name());
