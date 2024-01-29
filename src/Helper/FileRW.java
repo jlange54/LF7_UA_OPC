@@ -21,25 +21,16 @@ public class FileRW {
         writer.close();
     }
 
-    public static void writeWithIS (String directory, InputStream input,  int queries) throws IOException {
+    public static void writeWithIS (String directory, InputStream input, int queryDuration) throws IOException {
         Scanner in = new Scanner(input);
         FileWriter writer = new FileWriter(directory);
-        int lines = 0;
-        int loops = 0;
-        String firstSensor = null;
+        long startTime = System.currentTimeMillis();
 
-        while (in.hasNext()) {
+        while (in.hasNext() && System.currentTimeMillis() <= startTime+Long.valueOf(queryDuration)) {
             try {
                 String line = in.nextLine();
-                if (lines == 0) {
-                    firstSensor = Regex.substitution(line, "Sensor:.*(\".*\").*>.*VALUE:",1);
-                } else if (firstSensor.equals(Regex.substitution(line, "Sensor:.*(\".*\").*>.*VALUE:",1))) {
-                    loops++;
-                }
-                if (loops < queries) {
-                    writer.append(line + "\n");
-                }
-                lines++;
+                System.out.println(line);
+                writer.append(line + "\n");
 
             } catch (IOException e) {
                 e.printStackTrace();
