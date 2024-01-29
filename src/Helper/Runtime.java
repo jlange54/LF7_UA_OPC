@@ -1,26 +1,40 @@
 package Helper;
 
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.time.Duration;
-
 public class Runtime {
 
     private static long startTime;
-    private static long endTime;
 
-    public static long currentTime () {
-        long unixTime = System.currentTimeMillis() / 1000L;
-        return unixTime;
+    private static long currentTime () {
+        return System.currentTimeMillis();
     }
 
     public static void start () {
-       startTime = currentTime();
+        startTime = currentTime();
     }
 
-    public static long end () {
-        endTime = currentTime();
+    public static void end (timeUnit timeUnit, type type) {
+        long endTime = currentTime();
         long duration = endTime - startTime;
-        return duration;
+
+        switch (timeUnit) {
+            case seconds:
+                System.out.println(type.toString()+" finished in: "+duration/1000L+ " seconds");
+                break;
+            case minutes:
+                System.out.println(type.toString()+" finished in: "+duration/60000L+ " minutes");
+                break;
+            case ms:
+            default:
+                System.out.println(type.toString()+" finished in: "+duration+ " ms");
+                break;
+        }
+    }
+
+    public enum timeUnit {
+        ms, seconds, minutes
+    }
+
+    public enum type {
+        program, process
     }
 }
