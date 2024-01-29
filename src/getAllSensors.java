@@ -39,7 +39,7 @@ public class getAllSensors {
             InputStream input = OPCClientETS.getInstance().getInputStream();
 
             System.out.println("writing file for: "+ station.name());
-            FileRW.write("./data/sensors/export_"+station.name()+".txt",filterForSensor(input));
+            FileRW.write("./data/sensors/data/sensors_"+station.name()+".txt",filterForSensor(input));
             OPCClientETS.getInstance().disconnect();
             System.out.println("Completed instance: "+station.name());
         }catch (Exception e) {
