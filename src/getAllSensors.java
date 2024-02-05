@@ -21,6 +21,10 @@ public class getAllSensors {
         }
     }
 
+
+    /**
+     * This Method executes getAllSensorsFromStation for all stations expect "Controller"
+     */
     public static void execute () {
         for(Station station : Station.values()){
             if (!station.name().equals("Controller")){
@@ -30,6 +34,12 @@ public class getAllSensors {
         }
     }
 
+
+    /**
+     * This method browses a specified station and writes the Sensor Strings into a specified file directory
+     *
+     * @param station
+     */
     private static void getAllSensorsFromStation (Station station) {
         try {
             OPCClientETS.getInstance().connectToMachine(station);
@@ -47,6 +57,13 @@ public class getAllSensors {
         }
     }
 
+
+    /**
+     * This method returns a List of type String. It requires an InputStream that is filtered with regex to get the ns and s values for each sensor. The method terminates when a line in the InputStream contains "END DATASET"
+     *
+     * @param input
+     * @return
+     */
     public static List<String> filterForSensor (InputStream input) {
         List<String> result = new ArrayList<>();
         Scanner in = new Scanner(input);

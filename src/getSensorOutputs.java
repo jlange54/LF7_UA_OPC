@@ -13,6 +13,10 @@ import java.util.*;
 
 public class getSensorOutputs {
 
+    /**
+     This method executes getDataFromSensorsFromStation for all Stations except "Controller"
+     It requires a queryInterval which defines the time between the data logging form the specific station and queryDuration which defines the overall time the station if queried for
+    **/
     public static void execute (int queryInterval, int queryDuration) throws IOException {
         for(Station station : Station.values()){
             if (!station.name().equals("Controller")){
@@ -22,6 +26,14 @@ public class getSensorOutputs {
         }
     }
 
+    /**
+     * This method browses the specified station with the provided sensorList and provides an Inputstream to the writer which writes the log files into the specified directory
+     *
+     * @param station
+     * @param sensorList
+     * @param queryInterval
+     * @param queryDuration
+     */
     public static void getDataFromSensorsFromStation (Station station, SensorList sensorList, int queryInterval, int queryDuration) {
         try {
             OPCClientETS.getInstance().connectToMachine(station);
@@ -41,6 +53,13 @@ public class getSensorOutputs {
         }
     }
 
+    /**
+     * This method returns a SensorList for the provided station. It reads the previously generated file that contains all sensors for a station.
+     *
+     * @param station
+     * @return
+     * @throws IOException
+     */
     private static SensorList buildSensorListFromStation (Station station) throws IOException {
         String directory = "./data/sensors/export_"+station.name()+".txt";
         List <String> sensorsFromExport = FileRW.read(directory);
