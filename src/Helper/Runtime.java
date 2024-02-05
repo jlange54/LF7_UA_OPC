@@ -1,5 +1,9 @@
 package Helper;
 
+/**
+ * This class can be used to get the overall runtime of a program or process in ms, seconds or minutes
+ * This is only in here because i was bored and wanted to test some stuff
+ */
 public class Runtime {
 
     private static long startTime;
