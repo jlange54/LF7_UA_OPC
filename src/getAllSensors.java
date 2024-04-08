@@ -11,7 +11,6 @@ import java.util.Scanner;
 
 public class getAllSensors {
 
-
     public static void getDataFromSensorsFromStation (Station station, SensorList sensorList) {
         try {
             OPCClientETS.getInstance().connectToMachine(station);
