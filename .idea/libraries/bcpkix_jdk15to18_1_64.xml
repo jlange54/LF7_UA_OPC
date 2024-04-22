@@ -11,7 +11,8 @@
       <root url="jar://$PROJECT_DIR$/lib/opc_test_v2_2023-02-06.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/prosys-opc-ua-sdk-evaluation-4.6.0-1594.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/slf4j-api-1.7.28.jar!/" />
-      <root url="jar://$PROJECT_DIR$/lib/ojdbc11.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/mysql-connector-j-8.3.0.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/ojdbc8.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
