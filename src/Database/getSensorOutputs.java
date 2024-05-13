@@ -5,14 +5,11 @@ import Helper.Regex;
 import de.judge.opc_ets.OPCClientETS;
 import de.judge.opc_ets.SensorList;
 import de.judge.opc_ets.Station;
+import Helper.Debug;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -36,11 +33,13 @@ public class getSensorOutputs {
 
         System.out.println("Building crawlList for station: " + station.name());
         List<Crawl> crawlList = buildCrawlList(OPCClientETS.getInstance().getInputStream(), queryDuration);
+//        Debug List
+//        List<Crawl> crawlList = Debug.generateCrawlerTest();
         fillCrawlTable(crawlList, station);
 
     }
 
-    private static List<Crawl> buildCrawlList(InputStream input, int queryDuration) throws IOException, SQLException {
+    private static List<Crawl> buildCrawlList(InputStream input, int queryDuration)  {
         Scanner in = new Scanner(input);
         List<Crawl> crawlList = new ArrayList<>();
         long startTime = System.currentTimeMillis();
@@ -57,7 +56,6 @@ public class getSensorOutputs {
             crawlList.add(crawlLine);
         }
 
-        opcDatabase.closeConnection(opcDatabase.getConnection());
         return crawlList;
     }
 
@@ -75,7 +73,7 @@ public class getSensorOutputs {
             String sensorLine[] = sensor.split(";");
             sensorList.addSensor(Integer.parseInt(sensorLine[0]), sensorLine[1]);
         }
-        opcDatabase.closeConnection(opcDatabase.getConnection());
+
         return sensorList;
     }
 
@@ -102,14 +100,13 @@ public class getSensorOutputs {
                 preparedStatement.setString(2, crawl.getServerTimestamp());
                 preparedStatement.setString(3, "LF7");
                 preparedStatement.setString(4, Integer.toString(opcDatabase.getStationIdToSensor(crawl.getSensor())));
-                preparedStatement.setString(5, "-1");
+                preparedStatement.setString(5, "1");
                 preparedStatement.setString(6, Integer.toString(opcDatabase.getLastIdFromDataValueTable()));
                 preparedStatement.setString(7, Integer.toString(opcDatabase.getSensorId(crawl.getSensor())));
                 preparedStatement.execute();
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            opcDatabase.closeConnection(opcDatabase.getConnection());
         }
     }
 }
