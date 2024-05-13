@@ -1,11 +1,11 @@
-import Helper.FileRW;
-import Helper.Regex;
+package Helper;
+
 import Object.Crawl;
-import java.io.InputStream;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Scanner;
 
 public class Debug {
     public static void printList (List<String> inputList) {
@@ -26,8 +26,8 @@ public class Debug {
         return testList;
     }
 
-    public static List<Crawl> generateCrawlerTest () {
-        List<String> testCrawl = FileRW.read("./data/sensorDataOutputs/2024-05-13T14-12-32-492725200_export_PL.txt");
+    public static List<Crawl> generateCrawlerTest () throws IOException {
+        List<String> testCrawl = FileRW.read("./data/sensorDataOutputs/2024-05-13_ExportVikoria.txt");
         List<Crawl> crawlList = new ArrayList<>();
 
         for (String line : testCrawl) {
