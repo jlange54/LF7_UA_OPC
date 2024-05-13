@@ -15,10 +15,6 @@ public class opcDatabase {
         return DriverManager.getConnection("jdbc:mysql://localhost:3306/lf7_ua_opc", "root", "");
     }
 
-    public static void closeConnection(Connection con) throws SQLException {
-        con.close();
-    }
-
     /**
      * This method checks if a specified table is empty and returns a boolean
      *
@@ -33,7 +29,8 @@ public class opcDatabase {
         if (resultSet.next()) {
             return true;
         }
-        closeConnection(getConnection());
+        statement.close();
+        resultSet.close();
         return false;
     }
 
@@ -63,7 +60,8 @@ public class opcDatabase {
             }
         }
 
-        closeConnection(getConnection());
+        statement.close();
+        resultSet.close();
         return result;
     }
 
@@ -79,6 +77,8 @@ public class opcDatabase {
             String s = resultSet.getString(2);
             result.add(ns + ";" +s);
         }
+        preparedStatement.close();
+        resultSet.close();
         return result;
     }
 
@@ -92,7 +92,8 @@ public class opcDatabase {
         while (resultSet.next()) {
             id = resultSet.getInt(1);
         }
-        closeConnection(getConnection());
+        preparedStatement.close();
+        resultSet.close();
         return id;
     }
 
@@ -107,7 +108,8 @@ public class opcDatabase {
         while (resultSet.next()) {
             id = resultSet.getInt(1);
         }
-        closeConnection(getConnection());
+        preparedStatement.close();
+        resultSet.close();
         return id;
     }
 
@@ -118,7 +120,8 @@ public class opcDatabase {
         if (resultSet.next()) {
             id = resultSet.getInt(1);
         }
-        closeConnection(getConnection());
+        statement.close();
+        resultSet.close();
         return id;
 
     }
