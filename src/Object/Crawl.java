@@ -1,12 +1,14 @@
 package Object;
 
 public class Crawl {
+    private String raw;
     private String sensor;
     private String value;
     private String sourceTimestamp;
     private String serverTimestamp;
 
-    public Crawl(String sensor, String value, String sourceTimestamp, String serverTimestamp) {
+    public Crawl(String raw, String sensor, String value, String sourceTimestamp, String serverTimestamp) {
+        this.raw = raw;
         this.sensor = sensor;
         this.value = value;
         this.sourceTimestamp = sourceTimestamp;
@@ -19,6 +21,14 @@ public class Crawl {
 
     public void setSensor(String sensor) {
         this.sensor = sensor;
+    }
+
+    public void setRaw(String raw) {
+        this.raw = raw;
+    }
+
+    public String getRaw() {
+        return raw;
     }
 
     public String getValue() {
@@ -48,7 +58,8 @@ public class Crawl {
     @Override
     public String toString() {
         return "Crawl{" +
-                "sensor='" + sensor + '\'' +
+                "raw='" + raw + '\'' +
+                ", sensor='" + sensor + '\'' +
                 ", value='" + value + '\'' +
                 ", sourceTimestamp='" + sourceTimestamp + '\'' +
                 ", serverTimestamp='" + serverTimestamp + '\'' +
