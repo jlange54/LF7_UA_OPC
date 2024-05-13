@@ -20,7 +20,7 @@ public class getSensorOutputs {
         for (Station station : Station.values()) {
             if (!station.name().equals("Controller")) {
                 System.out.println("Getting output from: " + station.name());
-//                getDataFromSensorsFromStationToLocalStorage(station, buildSensorListForStationFromLocal(station), queryInterval, queryDuration);
+                getDataFromSensorsFromStationToLocalStorage(station, buildSensorListForStationFromLocal(station), queryInterval, queryDuration);
             }
         }
     }
