@@ -3,6 +3,7 @@ package Database;
 import de.judge.opc_ets.Sensor;
 import de.judge.opc_ets.Station;
 
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,6 +13,10 @@ public class opcDatabase {
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection("jdbc:mysql://localhost:3306/lf7_ua_opc", "root", "");
+    }
+
+    public static void closeConnection(Connection con) throws SQLException {
+        con.close();
     }
 
     /**
@@ -28,6 +33,7 @@ public class opcDatabase {
         if (resultSet.next()) {
             return true;
         }
+        closeConnection(getConnection());
         return false;
     }
 
@@ -56,6 +62,8 @@ public class opcDatabase {
                 }
             }
         }
+
+        closeConnection(getConnection());
         return result;
     }
 
@@ -72,6 +80,47 @@ public class opcDatabase {
             result.add(ns + ";" +s);
         }
         return result;
+    }
+
+    public static int getSensorId (String sensorname) throws SQLException {
+        String sql = "SELECT Id FROM sensor WHERE sensor.s = ?";
+        PreparedStatement preparedStatement = getConnection().prepareStatement(sql);
+        preparedStatement.setString(1, sensorname);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        int id = -1;
+        while (resultSet.next()) {
+            id = resultSet.getInt(1);
+        }
+        closeConnection(getConnection());
+        return id;
+    }
+
+    public static int getStationIdToSensor (String sensorname) throws SQLException {
+        String sql = "SELECT StationId  FROM sensor WHERE sensor.s = ?";
+
+        PreparedStatement preparedStatement = getConnection().prepareStatement(sql);
+        preparedStatement.setString(1, sensorname);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        int id = -1;
+        while (resultSet.next()) {
+            id = resultSet.getInt(1);
+        }
+        closeConnection(getConnection());
+        return id;
+    }
+
+    public static int getLastIdFromDataValueTable () throws SQLException {
+        Statement statement = getConnection().createStatement();
+        ResultSet resultSet = statement.executeQuery("SELECT MAX(id) FROM datavalue");
+        int id = -1;
+        if (resultSet.next()) {
+            id = resultSet.getInt(1);
+        }
+        closeConnection(getConnection());
+        return id;
+
     }
 
 }
