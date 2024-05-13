@@ -1,6 +1,11 @@
+import Helper.FileRW;
+import Helper.Regex;
+import Object.Crawl;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Scanner;
 
 public class Debug {
     public static void printList (List<String> inputList) {
@@ -19,5 +24,23 @@ public class Debug {
             testList.add(line);
         }
         return testList;
+    }
+
+    public static List<Crawl> generateCrawlerTest () {
+        List<String> testCrawl = FileRW.read("./data/sensorDataOutputs/2024-05-13T14-12-32-492725200_export_PL.txt");
+        List<Crawl> crawlList = new ArrayList<>();
+
+        for (String line : testCrawl) {
+            System.out.println(line);
+            String raw = line;
+            String sensor = Regex.substitution(line, "Sensor:.*(\".*\").*VALUE:",1);
+            String value = Regex.substitution(line, "DataValue.*value=(.*),.*statusCode",1);
+            String sourceTimestamp = Regex.substitution(line, "sourceTimestamp=(.*),.*sourcePicoseconds",1);
+            String serverTimestamp = Regex.substitution(line, "serverTimestamp=(.*),.*serverPicoseconds",1);
+            Crawl crawlLine = new Crawl(raw, sensor, value, sourceTimestamp, serverTimestamp);
+            crawlList.add(crawlLine);
+        }
+
+        return crawlList;
     }
 }
