@@ -1,7 +1,8 @@
+package Local;
+
 import Helper.FileRW;
 import Helper.Regex;
 import de.judge.opc_ets.OPCClientETS;
-import de.judge.opc_ets.SensorList;
 import de.judge.opc_ets.Station;
 
 import java.io.InputStream;
@@ -10,16 +11,6 @@ import java.util.List;
 import java.util.Scanner;
 
 public class getAllSensors {
-
-    public static void getDataFromSensorsFromStation (Station station, SensorList sensorList) {
-        try {
-            OPCClientETS.getInstance().connectToMachine(station);
-            OPCClientETS.getInstance().browseOPCServer(sensorList);
-        }catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 
     /**
      * This Method executes getAllSensorsFromStation for all stations expect "Controller"

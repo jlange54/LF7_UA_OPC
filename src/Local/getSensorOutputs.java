@@ -1,11 +1,10 @@
+package Local;
+
 import Helper.FileRW;
-import Helper.Regex;
 import de.judge.opc_ets.OPCClientETS;
-import de.judge.opc_ets.Sensor;
 import de.judge.opc_ets.SensorList;
 import de.judge.opc_ets.Station;
 
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
@@ -14,27 +13,27 @@ import java.util.*;
 public class getSensorOutputs {
 
     /**
-     This method executes getDataFromSensorsFromStation for all Stations except "Controller"
-     It requires a queryInterval which defines the time between the data logging form the specific station and queryDuration which defines the overall time the station if queried for
-    **/
-    public static void execute (int queryInterval, int queryDuration) throws IOException {
-        for(Station station : Station.values()){
-            if (!station.name().equals("Controller")){
+     * This method executes getDataFromSensorsFromStationToLocal for all Stations except "Controller"
+     * It requires a queryInterval which defines the time between the data logging form the specific station and queryDuration which defines the overall time the station if queried for
+     **/
+    public static void execute(int queryInterval, int queryDuration) throws IOException {
+        for (Station station : Station.values()) {
+            if (!station.name().equals("Controller")) {
                 System.out.println("Getting output from: " + station.name());
-                getDataFromSensorsFromStation(station, buildSensorListFromStation (station), queryInterval, queryDuration);
+//                getDataFromSensorsFromStationToLocalStorage(station, buildSensorListForStationFromLocal(station), queryInterval, queryDuration);
             }
         }
     }
 
     /**
-     * This method browses the specified station with the provided sensorList and provides an Inputstream to the writer which writes the log files into the specified directory
+     * This method browses the specified station with the provided sensorList and provides an Inputstream to the writer which writes the log files into the specified local directory
      *
      * @param station
      * @param sensorList
      * @param queryInterval
      * @param queryDuration
      */
-    public static void getDataFromSensorsFromStation (Station station, SensorList sensorList, int queryInterval, int queryDuration) {
+    public static void getDataFromSensorsFromStationToLocalStorage(Station station, SensorList sensorList, int queryInterval, int queryDuration) {
         try {
             OPCClientETS.getInstance().connectToMachine(station);
             OPCClientETS.getInstance().setCrawlOffset(queryInterval);
@@ -47,22 +46,22 @@ public class getSensorOutputs {
             FileRW.writeWithIS("./data/sensorDataOutputs/" + time + "_export_" + station.name() + ".txt", input, queryDuration);
 
             OPCClientETS.getInstance().disconnect();
-            System.out.println("Completed instance: "+station.name());
-        }catch (Exception e) {
+            System.out.println("Completed instance: " + station.name());
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * This method returns a SensorList for the provided station. It reads the previously generated file that contains all sensors for a station.
+     * This method returns a SensorList from local storage file for the provided station. It reads the previously generated file that contains all sensors for a station.
      *
      * @param station
      * @return
      * @throws IOException
      */
-    private static SensorList buildSensorListFromStation (Station station) throws IOException {
-        String directory = "./data/sensors/export_"+station.name()+".txt";
-        List <String> sensorsFromExport = FileRW.read(directory);
+    private static SensorList buildSensorListForStationFromLocal(Station station) throws IOException {
+        String directory = "./data/sensors/export_" + station.name() + ".txt";
+        List<String> sensorsFromExport = FileRW.read(directory);
         Iterator<String> sensorsFromExportIterator = sensorsFromExport.iterator();
         SensorList result = new SensorList();
 
@@ -72,4 +71,7 @@ public class getSensorOutputs {
         }
         return result;
     }
+
+
+
 }

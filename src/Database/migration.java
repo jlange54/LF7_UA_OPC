@@ -9,7 +9,7 @@ import java.util.List;
 
 public class migration {
     public static void fillStationsSensors() throws Exception {
-        Connection opcDatabaseConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/lf7_ua_opc", "root", "");
+        Connection opcDatabaseConnection = opcDatabase.getConnection();
 
         opcDatabase.clearTable(opcDatabaseConnection, "lf7_ua_opc.sensor");
         opcDatabase.clearTable(opcDatabaseConnection, "lf7_ua_opc.station");
