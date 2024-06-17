@@ -5,7 +5,6 @@ import Helper.Regex;
 import de.judge.opc_ets.OPCClientETS;
 import de.judge.opc_ets.SensorList;
 import de.judge.opc_ets.Station;
-import Helper.Debug;
 
 import java.io.InputStream;
 import java.sql.PreparedStatement;
@@ -14,10 +13,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class getSensorOutputs {
+public class GetSensorOutputs {
 
     public static void execute(int queryInterval, int queryDuration) throws Exception {
-        for (Station station : opcDatabase.getStationsFromDB(opcDatabase.getConnection())) {
+        for (Station station : OpcDatabase.getStationsFromDB(OpcDatabase.getConnection())) {
             if (!station.name().equals("Controller")) {
                 System.out.println("Getting output from: " + station.name());
                 outputsToDatabase(station, queryInterval, queryDuration);
@@ -68,7 +67,7 @@ public class getSensorOutputs {
      */
     private static SensorList buildSensorList(Station station) throws SQLException {
         SensorList sensorList = new SensorList();
-        List<String> sensors = opcDatabase.getSensorsFromDB(opcDatabase.getConnection(), station.name());
+        List<String> sensors = OpcDatabase.getSensorsFromDB(OpcDatabase.getConnection(), station.name());
         for (String sensor : sensors) {
             String sensorLine[] = sensor.split(";");
             sensorList.addSensor(Integer.parseInt(sensorLine[0]), sensorLine[1]);
@@ -81,7 +80,7 @@ public class getSensorOutputs {
         for (Crawl crawl : crawlList) {
             System.out.println(crawl);
             String datavalueSql = "INSERT INTO datavalue (RawValue, CalculatedValue, Valid) VALUES (?,?,?)";
-            try (PreparedStatement preparedStatement = opcDatabase.getConnection().prepareStatement(datavalueSql)) {
+            try (PreparedStatement preparedStatement = OpcDatabase.getConnection().prepareStatement(datavalueSql)) {
                 preparedStatement.setString(1, crawl.getRaw());
                 preparedStatement.setString(2, crawl.getValue());
                 int valid = 0;
@@ -95,14 +94,14 @@ public class getSensorOutputs {
             }
 
             String datacrawlSql = "INSERT INTO datacrawl (sourceTimestamp, serverTimestamp, Anlagenname, StationId, OrderId, DataValueId, SensorId) VALUES (?,?,?,?,?,?,?)";
-            try (PreparedStatement preparedStatement = opcDatabase.getConnection().prepareStatement(datacrawlSql)) {
+            try (PreparedStatement preparedStatement = OpcDatabase.getConnection().prepareStatement(datacrawlSql)) {
                 preparedStatement.setString(1, crawl.getSourceTimestamp());
                 preparedStatement.setString(2, crawl.getServerTimestamp());
                 preparedStatement.setString(3, "LF7");
-                preparedStatement.setString(4, Integer.toString(opcDatabase.getStationIdToSensor(crawl.getSensor())));
+                preparedStatement.setString(4, Integer.toString(OpcDatabase.getStationIdToSensor(crawl.getSensor())));
                 preparedStatement.setString(5, "1");
-                preparedStatement.setString(6, Integer.toString(opcDatabase.getLastIdFromDataValueTable()));
-                preparedStatement.setString(7, Integer.toString(opcDatabase.getSensorId(crawl.getSensor())));
+                preparedStatement.setString(6, Integer.toString(OpcDatabase.getLastIdFromDataValueTable()));
+                preparedStatement.setString(7, Integer.toString(OpcDatabase.getSensorId(crawl.getSensor())));
                 preparedStatement.execute();
             } catch (SQLException e) {
                 e.printStackTrace();

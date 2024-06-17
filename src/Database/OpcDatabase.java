@@ -1,6 +1,5 @@
 package Database;
 
-import de.judge.opc_ets.Sensor;
 import de.judge.opc_ets.Station;
 
 
@@ -9,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class opcDatabase {
+public class OpcDatabase {
 
     public static Connection getConnection() throws SQLException {
         return DriverManager.getConnection("jdbc:mysql://localhost:3306/lf7_ua_opc", "root", "");

@@ -7,12 +7,12 @@ import java.sql.*;
 import java.util.List;
 
 
-public class migration {
+public class Migration {
     public static void fillStationsSensors() throws Exception {
-        Connection opcDatabaseConnection = opcDatabase.getConnection();
+        Connection opcDatabaseConnection = OpcDatabase.getConnection();
 
-        opcDatabase.clearTable(opcDatabaseConnection, "lf7_ua_opc.sensor");
-        opcDatabase.clearTable(opcDatabaseConnection, "lf7_ua_opc.station");
+        OpcDatabase.clearTable(opcDatabaseConnection, "lf7_ua_opc.sensor");
+        OpcDatabase.clearTable(opcDatabaseConnection, "lf7_ua_opc.station");
         fillStations(opcDatabaseConnection);
         fillSensors(opcDatabaseConnection);
     }
@@ -20,12 +20,12 @@ public class migration {
 
     /**
      * Only call this method when the table station is empty!!! Risk of duplicate entries otherwise
-     * This method fills the Database.opcDatabase table station with all stations except "Controller"
+     * This method fills the Database.OpcDatabase table station with all stations except "Controller"
      * @param connection
      * @throws SQLException
      */
     private static void fillStations(Connection connection) throws Exception {
-        if (opcDatabase.isTableFilled(connection, "lf7_ua_opc.station")) {
+        if (OpcDatabase.isTableFilled(connection, "lf7_ua_opc.station")) {
             throw new Exception("Table is already filled");
         }
 
@@ -40,16 +40,16 @@ public class migration {
 
     /**
      * Only call this method when the table sensor is empty!!! Risk of duplicate entries otherwise
-     * This method fills the Database.opcDatabase table sensor with all sensors according to their station
+     * This method fills the Database.OpcDatabase table sensor with all sensors according to their station
      * @param connection
      * @throws Exception
      */
     private static void fillSensors(Connection connection) throws Exception {
-        if (opcDatabase.isTableFilled(connection, "lf7_ua_opc.sensor")) {
+        if (OpcDatabase.isTableFilled(connection, "lf7_ua_opc.sensor")) {
             throw new Exception("Table is already filled");
         }
 
-        List<Station> stationList = opcDatabase.getStationsFromDB(connection);
+        List<Station> stationList = OpcDatabase.getStationsFromDB(connection);
         String stationID = null;
 
         for (Station station : stationList) {

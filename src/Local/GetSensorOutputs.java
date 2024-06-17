@@ -10,7 +10,7 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class getSensorOutputs {
+public class GetSensorOutputs {
 
     /**
      * This method executes getDataFromSensorsFromStationToLocal for all Stations except "Controller"

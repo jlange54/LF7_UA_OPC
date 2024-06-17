@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class getAllSensors {
+public class GetAllSensors {
 
     /**
      * This Method executes getAllSensorsFromStation for all stations expect "Controller"
