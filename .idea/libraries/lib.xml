@@ -14,6 +14,9 @@
       <root url="jar://$PROJECT_DIR$/lib/commons-logging-1.2.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/prosys-opc-ua-sdk-evaluation-4.6.0-1594.jar!/" />
       <root url="jar://$PROJECT_DIR$/lib/httpcore-nio-4.4.12.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jackson-core-2.9.9.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jackson-annotations-2.17.1.jar!/" />
+      <root url="jar://$PROJECT_DIR$/lib/jackson-databind-2.1.4.jar!/" />
     </CLASSES>
     <JAVADOC />
     <SOURCES />
