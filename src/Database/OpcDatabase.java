@@ -125,4 +125,18 @@ public class OpcDatabase {
 
     }
 
+    public static int getStationIdFromName (String name) throws SQLException {
+        String sql = "SELECT Id  FROM station WHERE name = ?";
+        PreparedStatement preparedStatement = getConnection().prepareStatement(sql);
+        preparedStatement.setString(1, name);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        int id = -1;
+        while (resultSet.next()) {
+            id = resultSet.getInt(1);
+        }
+        preparedStatement.close();
+        resultSet.close();
+        return id;
+    }
 }
